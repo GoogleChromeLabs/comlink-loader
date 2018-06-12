@@ -1,0 +1,69 @@
+{
+  "name": "comlink-loader",
+  "version": "1.0.0",
+  "description": "Webpack loader: offload modules to Worker threads seamlessly using Comlink",
+  "main": "dist/comlink-loader.js",
+  "repository": "GoogleChromeLabs/comlink-loader",
+  "scripts": {
+    "build": "microbundle --inline none --format cjs --no-compress src/*.js",
+    "prepublishOnly": "npm run build",
+    "dev": "karmatic watch --no-headless",
+    "test": "npm run build && karmatic",
+    "release": "npm t && git commit -am $npm_package_version && git tag $npm_package_version && git push && git push --tags && npm publish"
+  },
+  "eslintConfig": {
+    "extends": "eslint-config-standard",
+    "env": {
+      "browser": true,
+      "jasmine": true
+    },
+    "rules": {
+      "import/no-webpack-loader-syntax": false,
+      "indent": [
+        "error",
+        2
+      ],
+      "semi": [
+        "error",
+        "always"
+      ]
+    }
+  },
+  "files": [
+    "src",
+    "dist"
+  ],
+  "keywords": [
+    "webpack",
+    "loader",
+    "worker",
+    "web worker",
+    "thread",
+    "comlink"
+  ],
+  "author": "The Chromium Authors",
+  "contributors": [
+    {
+      "name": "Jason Miller",
+      "email": "developit@google.com"
+    }
+  ],
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "eslint": "^4.16.0",
+    "eslint-config-standard": "^11.0.0",
+    "eslint-plugin-import": "^2.12.0",
+    "eslint-plugin-node": "^6.0.1",
+    "eslint-plugin-promise": "^3.8.0",
+    "eslint-plugin-standard": "^3.1.0",
+    "jasmine-sinon": "^0.4.0",
+    "karmatic": "^1.0.5",
+    "microbundle": "^0.4.2",
+    "sinon": "^5.1.0"
+  },
+  "dependencies": {
+    "comlinkjs": "^2.4.1",
+    "loader-utils": "^1.1.0",
+    "worker-loader": "^2.0.0"
+  }
+}
