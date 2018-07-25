@@ -56,7 +56,7 @@ const inst = await new MyClass(42); // notice the await
 
 await inst.increment();
 
-await inst.foo();  // 43
+await inst.getValue();  // 43
 ```
 
 ## License
