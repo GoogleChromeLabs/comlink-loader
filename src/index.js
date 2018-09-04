@@ -21,12 +21,13 @@ export default function loader () { }
 
 loader.pitch = function (request) {
   const options = loaderUtils.getOptions(this) || {};
+  const multi = options.multiple || options.multi || options.singleton === false;
 
   return `
     import {Comlink} from 'comlinkjs';
-    var inst;
+    ${multi ? '' : 'var inst;'}
     export default function f() {
-      inst = inst || Comlink.proxy(require('!worker-loader?${JSON.stringify(options)}!${path.resolve(__dirname, 'comlink-worker-loader.js')}!${request}')());
+      ${multi ? 'var inst =' : 'inst = inst ||'} Comlink.proxy(require('!worker-loader?${JSON.stringify(options)}!${path.resolve(__dirname, 'comlink-worker-loader.js')}!${request}')());
       return this instanceof f ? new inst : inst;
     }
   `.replace(/\n\s*/g, '');
