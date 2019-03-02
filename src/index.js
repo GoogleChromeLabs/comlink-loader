@@ -24,10 +24,10 @@ loader.pitch = function (request) {
   const multi = options.multiple || options.multi || options.singleton === false;
 
   return `
-    import {Comlink} from 'comlinkjs';
+    import {proxy} from 'comlinkjs';
     ${multi ? '' : 'var inst;'}
     export default function f() {
-      ${multi ? 'var inst =' : 'inst = inst ||'} Comlink.proxy(require('!worker-loader?${JSON.stringify(options)}!${path.resolve(__dirname, 'comlink-worker-loader.js')}!${request}')());
+      ${multi ? 'var inst =' : 'inst = inst ||'} proxy(require('!worker-loader?${JSON.stringify(options)}!${path.resolve(__dirname, 'comlink-worker-loader.js')}!${request}')());
       return this instanceof f ? new inst : inst;
     }
   `.replace(/\n\s*/g, '');

@@ -62,7 +62,7 @@
     "sinon": "^5.1.0"
   },
   "dependencies": {
-    "comlinkjs": "^2.4.1",
+    "comlinkjs": "^3.1.1",
     "loader-utils": "^1.1.0",
     "worker-loader": "^2.0.0"
   }
