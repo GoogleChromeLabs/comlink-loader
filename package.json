@@ -59,7 +59,8 @@
     "jasmine-sinon": "^0.4.0",
     "karmatic": "^1.0.5",
     "microbundle": "^0.4.2",
-    "sinon": "^5.1.0"
+    "sinon": "^5.1.0",
+    "webpack": "^4.29.6"
   },
   "dependencies": {
     "comlinkjs": "^3.1.1",
