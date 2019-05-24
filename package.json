@@ -46,6 +46,10 @@
     {
       "name": "Jason Miller",
       "email": "developit@google.com"
+    },
+    {
+      "name": "Jasper Palfree",
+      "email": "jasper@wellcaffeinated.net"
     }
   ],
   "license": "Apache-2.0",
@@ -59,11 +63,12 @@
     "jasmine-sinon": "^0.4.0",
     "karmatic": "^1.0.5",
     "microbundle": "^0.4.2",
-    "sinon": "^5.1.0"
+    "sinon": "^5.1.0",
+    "webpack": "^4.32.2"
   },
   "dependencies": {
-    "comlinkjs": "^2.4.1",
+    "comlink": "^4.0.1",
     "loader-utils": "^1.1.0",
-    "worker-loader": "^2.0.0"
+    "worker-loader": "https://github.com/wellcaffeinated/worker-loader"
   }
 }

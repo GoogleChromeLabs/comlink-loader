@@ -17,7 +17,7 @@
 import sinon from 'sinon';
 import 'jasmine-sinon';
 import './other';
-import MyClass from 'comlink-loader!./worker';
+import worker from 'comlink-loader!./worker';
 
 const OriginalWorker = self.Worker;
 self.Worker = sinon.spy((url, opts) => new OriginalWorker(url, opts));
@@ -26,7 +26,7 @@ describe('worker', () => {
   let inst;
 
   it('should be instantiable', async () => {
-    inst = await new MyClass();
+    inst = await new (worker().MyClass)();
     expect(self.Worker).toHaveBeenCalledOnce();
   });
 
@@ -52,7 +52,7 @@ describe('worker', () => {
   it('should re-use Worker instances after the first instance', async () => {
     sinon.reset(self.Worker);
 
-    const secondInst = await new MyClass();
+    const secondInst = await new (worker().MyClass)();
     expect(secondInst).not.toBe(inst);
     expect(await secondInst.foo()).toBe(1);
 
