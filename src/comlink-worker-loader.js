@@ -15,7 +15,7 @@
  */
 
 export default function rpcWorkerLoader (content) {
-  return `import {Comlink} from 'comlinkjs';
+  return `import {Comlink} from 'comlink';
 ${content}
 for(var $$ in __webpack_exports__)if ($$!='__esModule')Comlink.expose(__webpack_exports__[$$],self)`;
 }

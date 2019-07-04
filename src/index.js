@@ -24,7 +24,7 @@ loader.pitch = function (request) {
   const multi = options.multiple || options.multi || options.singleton === false;
 
   return `
-    import {Comlink} from 'comlinkjs';
+    import {Comlink} from 'comlink';
     ${multi ? '' : 'var inst;'}
     export default function f() {
       ${multi ? 'var inst =' : 'inst = inst ||'} Comlink.proxy(require('!worker-loader?${JSON.stringify(options)}!${path.resolve(__dirname, 'comlink-worker-loader.js')}!${request}')());
