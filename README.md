@@ -33,7 +33,7 @@ In the example below, the sole difference between running `MyClass` on a Worker 
 import rnd from 'random-int';
 
 // Export as you would in a normal module:
-export const function meaningOfLife(){
+export function meaningOfLife(){
   return 42;
 }
 
