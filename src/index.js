@@ -30,5 +30,6 @@ loader.pitch = function (request) {
       ${multi ? 'var inst =' : 'inst = inst ||'} Comlink.proxy(require('!worker-loader?${JSON.stringify(options)}!${path.resolve(__dirname, 'comlink-worker-loader.js')}!${request}')());
       return this instanceof f ? new inst : inst;
     }
-  `.replace(/\n\s*/g, '');
+  `.replace(/\n\s*/g, '')
+   .replace(/\\/g, '\\\\');
 };
