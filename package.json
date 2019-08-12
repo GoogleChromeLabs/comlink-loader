@@ -69,6 +69,6 @@
   "dependencies": {
     "comlink": "^4.0.1",
     "loader-utils": "^1.1.0",
-    "worker-loader": "https://github.com/wellcaffeinated/worker-loader"
+    "worker-loader": "^2.0.0"
   }
 }
