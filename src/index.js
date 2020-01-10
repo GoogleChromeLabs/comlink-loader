@@ -25,13 +25,12 @@ export default function loader () { }
 loader.pitch = function (request) {
   const options = loaderUtils.getOptions(this) || {};
   const multi = options.multiple || options.multi || options.singleton === false;
-  const workerLoaderOptions = { ...options };
-
-  comlinkLoaderSpecificOptions.forEach(key => {
-    if (workerLoaderOptions[key]) {
-      delete workerLoaderOptions[key];
+  const workerLoaderOptions = {};
+  for (let i in options) {
+    if (comlinkLoaderSpecificOptions.indexOf(i) === -1) {
+      workerLoaderOptions[i] = options[i];
     }
-  });
+  }
 
   return `
     import {Comlink} from 'comlinkjs';
