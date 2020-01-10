@@ -16,6 +16,7 @@
 
 import path from 'path';
 import loaderUtils from 'loader-utils';
+import slash from 'slash';
 
 const comlinkLoaderSpecificOptions = ['multiple', 'multi', 'singleton'];
 
@@ -36,7 +37,7 @@ loader.pitch = function (request) {
     import {Comlink} from 'comlinkjs';
     ${multi ? '' : 'var inst;'}
     export default function f() {
-      ${multi ? 'var inst =' : 'inst = inst ||'} Comlink.proxy(require('!worker-loader?${JSON.stringify(workerLoaderOptions)}!${path.resolve(__dirname, 'comlink-worker-loader.js')}!${request}')());
+      ${multi ? 'var inst =' : 'inst = inst ||'} Comlink.proxy(require('!worker-loader?${JSON.stringify(workerLoaderOptions)}!${slash(path.resolve(__dirname, 'comlink-worker-loader.js'))}!${request}')());
       return this instanceof f ? new inst : inst;
     }
   `.replace(/\n\s*/g, '');
