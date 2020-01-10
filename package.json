@@ -8,7 +8,7 @@
     "build": "microbundle --inline none --format cjs --no-compress src/*.js",
     "prepublishOnly": "npm run build",
     "dev": "karmatic watch --no-headless",
-    "test": "npm run build && karmatic",
+    "test": "npm run build && karmatic --no-coverage",
     "release": "npm t && git commit -am $npm_package_version && git tag $npm_package_version && git push && git push --tags && npm publish"
   },
   "eslintConfig": {
@@ -57,8 +57,8 @@
     "eslint-plugin-promise": "^3.8.0",
     "eslint-plugin-standard": "^3.1.0",
     "jasmine-sinon": "^0.4.0",
-    "karmatic": "^1.0.5",
-    "microbundle": "^0.4.2",
+    "karmatic": "^1.4.0",
+    "microbundle": "^0.11.0",
     "sinon": "^5.1.0",
     "webpack": "^4.41.2"
   },
