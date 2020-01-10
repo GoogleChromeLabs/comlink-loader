@@ -63,7 +63,7 @@
     "webpack": "^4.41.2"
   },
   "dependencies": {
-    "comlinkjs": "^2.4.1",
+    "comlink": "^4.2.0",
     "loader-utils": "^1.1.0",
     "slash": "^3.0.0",
     "worker-loader": "^2.0.0"
