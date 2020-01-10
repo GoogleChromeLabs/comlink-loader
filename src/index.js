@@ -18,17 +18,26 @@ import path from 'path';
 import loaderUtils from 'loader-utils';
 import slash from 'slash';
 
+const comlinkLoaderSpecificOptions = ['multiple', 'multi', 'singleton'];
+
 export default function loader () { }
 
 loader.pitch = function (request) {
   const options = loaderUtils.getOptions(this) || {};
   const multi = options.multiple || options.multi || options.singleton === false;
+  const workerLoaderOptions = { ...options };
+
+  comlinkLoaderSpecificOptions.forEach(key => {
+    if (workerLoaderOptions[key]) {
+      delete workerLoaderOptions[key];
+    }
+  });
 
   return `
     import {Comlink} from 'comlinkjs';
     ${multi ? '' : 'var inst;'}
     export default function f() {
-      ${multi ? 'var inst =' : 'inst = inst ||'} Comlink.proxy(require('!worker-loader?${JSON.stringify(options)}!${slash(path.resolve(__dirname, 'comlink-worker-loader.js'))}!${request}')());
+      ${multi ? 'var inst =' : 'inst = inst ||'} Comlink.proxy(require('!worker-loader?${JSON.stringify(workerLoaderOptions)}!${slash(path.resolve(__dirname, 'comlink-worker-loader.js'))}!${request}')());
       return this instanceof f ? new inst : inst;
     }
   `.replace(/\n\s*/g, '');
