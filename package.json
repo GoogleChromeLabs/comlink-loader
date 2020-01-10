@@ -1,6 +1,6 @@
 {
   "name": "comlink-loader",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Webpack loader: offload modules to Worker threads seamlessly using Comlink",
   "main": "dist/comlink-loader.js",
   "repository": "GoogleChromeLabs/comlink-loader",
@@ -8,7 +8,7 @@
     "build": "microbundle --inline none --format cjs --no-compress src/*.js",
     "prepublishOnly": "npm run build",
     "dev": "karmatic watch --no-headless",
-    "test": "npm run build && karmatic",
+    "test": "npm run build && karmatic --no-coverage",
     "release": "npm t && git commit -am $npm_package_version && git tag $npm_package_version && git push && git push --tags && npm publish"
   },
   "eslintConfig": {
@@ -61,14 +61,15 @@
     "eslint-plugin-promise": "^3.8.0",
     "eslint-plugin-standard": "^3.1.0",
     "jasmine-sinon": "^0.4.0",
-    "karmatic": "^1.0.5",
-    "microbundle": "^0.4.2",
+    "karmatic": "^1.4.0",
+    "microbundle": "^0.11.0",
     "sinon": "^5.1.0",
-    "webpack": "^4.32.2"
+    "webpack": "^4.41.2"
   },
   "dependencies": {
-    "comlink": "^4.0.1",
+    "comlink": "^4.2.0",
     "loader-utils": "^1.1.0",
+    "slash": "^3.0.0",
     "worker-loader": "^2.0.0"
   }
 }

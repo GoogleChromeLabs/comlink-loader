@@ -5,6 +5,7 @@ node_modules
 *.log
 build
 dist
+coverage
 package-lock.json
 yarn.lock
 coverage/*

@@ -16,20 +16,29 @@
 
 import path from 'path';
 import loaderUtils from 'loader-utils';
+import slash from 'slash';
+
+const comlinkLoaderSpecificOptions = ['multiple', 'multi', 'singleton'];
 
 export default function loader () { }
 
 loader.pitch = function (request) {
   const options = loaderUtils.getOptions(this) || {};
-  // const multi = options.multiple || options.multi || options.singleton === false;
+  const multi = options.multiple || options.multi || options.singleton === false;
+  const workerLoaderOptions = {};
+  for (let i in options) {
+    if (comlinkLoaderSpecificOptions.indexOf(i) === -1) {
+      workerLoaderOptions[i] = options[i];
+    }
+  }
 
   return `
     import { wrap } from 'comlink';
     var inst;
-    var worker = require('!worker-loader?${JSON.stringify(options)}!${path.resolve(__dirname, 'comlink-worker-loader.js')}!${request}');
+    var worker = wrap(require('!worker-loader?${JSON.stringify(workerLoaderOptions)}!${slash(path.resolve(__dirname, 'comlink-worker-loader.js'))}!${request}');
     export default function f() {
-      inst = inst || wrap(worker());
-      return (this instanceof f) ? wrap(worker()) : inst;
+      if (this instanceof f) return wrap(worker());
+      return inst = inst || wrap(worker());
     }
   `.replace(/\n\s*/g, '');
 };
