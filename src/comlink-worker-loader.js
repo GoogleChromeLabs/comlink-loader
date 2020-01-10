@@ -15,7 +15,13 @@
  */
 
 export default function rpcWorkerLoader (content) {
-  return `import {expose} from 'comlink';
-${content}
-for(var $$ in __webpack_exports__)if ($$!='__esModule')expose(__webpack_exports__[$$],self)`;
+  return `import { expose } from 'comlink';
+  ${content};
+  expose(
+    Object.keys(__webpack_exports__).reduce(function(r,k){
+      if (k=='__esModule') return r;
+      r[k] = __webpack_exports__[k];
+      return r
+    },{})
+  )`;
 }

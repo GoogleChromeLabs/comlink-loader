@@ -46,6 +46,10 @@
     {
       "name": "Jason Miller",
       "email": "developit@google.com"
+    },
+    {
+      "name": "Jasper Palfree",
+      "email": "jasper@wellcaffeinated.net"
     }
   ],
   "license": "Apache-2.0",

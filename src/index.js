@@ -33,11 +33,12 @@ loader.pitch = function (request) {
   }
 
   return `
-    import {wrap} from 'comlink';
-    ${multi ? '' : 'var inst;'}
+    import { wrap } from 'comlink';
+    var inst;
+    var worker = wrap(require('!worker-loader?${JSON.stringify(workerLoaderOptions)}!${slash(path.resolve(__dirname, 'comlink-worker-loader.js'))}!${request}');
     export default function f() {
-      ${multi ? 'var inst =' : 'inst = inst ||'} wrap(require('!worker-loader?${JSON.stringify(workerLoaderOptions)}!${slash(path.resolve(__dirname, 'comlink-worker-loader.js'))}!${request}')());
-      return this instanceof f ? new inst : inst;
+      if (this instanceof f) return wrap(worker());
+      return inst = inst || wrap(worker());
     }
   `.replace(/\n\s*/g, '');
 };

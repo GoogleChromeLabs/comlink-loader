@@ -33,6 +33,10 @@ In the example below, the sole difference between running `MyClass` on a Worker 
 import rnd from 'random-int';
 
 // Export as you would in a normal module:
+export function meaningOfLife(){
+  return 42;
+}
+
 export class MyClass {
   constructor(value = rnd()) {
     this.value = value;
@@ -50,13 +54,16 @@ export class MyClass {
 **main.js**: _(our demo, on the main thread)_
 
 ```js
-import { MyClass } from 'comlink-loader!./my-class';
+import worker from 'comlink-loader!./my-class';
+const inst = worker();
 
-const inst = await new MyClass(42); // notice the await
+await inst.meaningOfLife(); // 42
 
-await inst.increment();
+const obj = await new inst.MyClass(42); // notice the await
 
-await inst.getValue();  // 43
+await obj.increment();
+
+await obj.getValue();  // 43
 ```
 
 ## License
