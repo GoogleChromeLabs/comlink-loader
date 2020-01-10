@@ -28,7 +28,7 @@ loader.pitch = function (request) {
     import {Comlink} from 'comlinkjs';
     ${multi ? '' : 'var inst;'}
     export default function f() {
-      ${multi ? 'var inst =' : 'inst = inst ||'} Comlink.proxy(require('!worker-loader?${JSON.stringify(options)}!${slash(path.resolve(__dirname, 'comlink-worker-loader.js'))}!${slash(request)}')());
+      ${multi ? 'var inst =' : 'inst = inst ||'} Comlink.proxy(require('!worker-loader?${JSON.stringify(options)}!${slash(path.resolve(__dirname, 'comlink-worker-loader.js'))}!${request}')());
       return this instanceof f ? new inst : inst;
     }
   `.replace(/\n\s*/g, '');
