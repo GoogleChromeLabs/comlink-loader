@@ -16,6 +16,10 @@
 
 import { otherBar } from './other';
 
+export function hello() {
+  return Promise.resolve('world');
+}
+
 export class MyClass {
   constructor ({ value = 41 } = {}) {
     this.myValue = value;

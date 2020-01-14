@@ -16,18 +16,24 @@
 
 import sinon from 'sinon';
 import 'jasmine-sinon';
-import './other';
-import worker from 'comlink-loader!./worker';
+import MyWorker from 'comlink-loader!./worker';
 
 const OriginalWorker = self.Worker;
 self.Worker = sinon.spy((url, opts) => new OriginalWorker(url, opts));
 
 describe('worker', () => {
-  let inst;
+  let worker, inst;
+
+  it('should be a factory', async () => {
+    worker = new MyWorker();
+    expect(self.Worker).toHaveBeenCalledOnce();
+    self.Worker.resetHistory();
+    expect(self.Worker).not.toHaveBeenCalled();
+  });
 
   it('should be instantiable', async () => {
-    inst = await new (worker().MyClass)();
-    expect(self.Worker).toHaveBeenCalledOnce();
+    inst = await new (worker.MyClass)();
+    expect(self.Worker).not.toHaveBeenCalled();
   });
 
   it('inst.foo()', async () => {
@@ -44,17 +50,27 @@ describe('worker', () => {
   it('should propagate worker exceptions', async () => {
     try {
       await inst.throwError();
-    } catch (e) {
+    }
+    catch (e) {
       expect(e).toMatch(/Error/);
     }
   });
 
-  it('should re-use Worker instances after the first instance', async () => {
-    sinon.reset(self.Worker);
+  it('should re-use Worker instances when the factory is invoked without `new`', async () => {
+    self.Worker.resetHistory();
 
-    const secondInst = await new (worker().MyClass)();
-    expect(secondInst).not.toBe(inst);
+    const firstWorker = MyWorker();
+    const firstInst = await new (firstWorker.MyClass)();
+    expect(await firstInst.foo()).toBe(1);
+
+    expect(self.Worker).toHaveBeenCalledOnce();
+
+    self.Worker.resetHistory();
+
+    const secondWorker = MyWorker();
+    const secondInst = await new (secondWorker.MyClass)();
     expect(await secondInst.foo()).toBe(1);
+    expect(secondInst).not.toBe(inst);
 
     expect(self.Worker).not.toHaveBeenCalled();
   });
