@@ -39,19 +39,30 @@ loader.pitch = function (request) {
 
   const remainingRequest = JSON.stringify(workerLoader + '!' + request);
 
-  if (singleton) {
+  // ?singleton mode: export an instance of the worker
+  if (singleton === true) {
     return `
       module.exports = require('comlink').wrap(require(${remainingRequest})());
-      module.exports.__esModule = true;
+      ${options.module === false ? '' : 'module.exports.__esModule = true;'}
+    `.replace(/\n\s*/g, '');
+  }
+
+  // ?singleton=false mode: always return a new worker from the factory
+  if (singleton === false) {
+    return `
+      module.exports = function () {
+        return require('comlink').wrap(require(${remainingRequest})());
+      };
     `.replace(/\n\s*/g, '');
   }
 
   return `
-    import {wrap} from 'comlink';
-    var inst, Worker = require(${remainingRequest});
-    export default function f() {
+    var wrap = require('comlink').wrap,
+        Worker = require(${remainingRequest}),
+        inst;
+    module.exports = function f() {
       if (this instanceof f) return wrap(Worker());
       return inst || (inst = wrap(Worker()));
-    }
+    };
   `.replace(/\n\s*/g, '');
 };
