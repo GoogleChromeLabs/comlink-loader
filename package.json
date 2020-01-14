@@ -12,20 +12,12 @@
     "release": "npm t && git commit -am $npm_package_version && git tag $npm_package_version && git push && git push --tags && npm publish"
   },
   "eslintConfig": {
-    "extends": "eslint-config-standard",
-    "env": {
-      "browser": true,
-      "jasmine": true
-    },
+    "extends": "developit",
     "rules": {
       "import/no-webpack-loader-syntax": false,
       "indent": [
         "error",
         2
-      ],
-      "semi": [
-        "error",
-        "always"
       ]
     }
   },
@@ -55,15 +47,11 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "eslint": "^4.16.0",
-    "eslint-config-standard": "^11.0.0",
-    "eslint-plugin-import": "^2.12.0",
-    "eslint-plugin-node": "^6.0.1",
-    "eslint-plugin-promise": "^3.8.0",
-    "eslint-plugin-standard": "^3.1.0",
+    "eslint-config-developit": "^1.1.1",
     "jasmine-sinon": "^0.4.0",
     "karmatic": "^1.4.0",
     "microbundle": "^0.11.0",
-    "sinon": "^5.1.0",
+    "sinon": "^8.0.4",
     "webpack": "^4.41.2"
   },
   "dependencies": {

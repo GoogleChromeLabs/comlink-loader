@@ -18,13 +18,16 @@ import path from 'path';
 import loaderUtils from 'loader-utils';
 import slash from 'slash';
 
-const comlinkLoaderSpecificOptions = ['multiple', 'multi', 'singleton'];
+const comlinkLoaderSpecificOptions = [
+  'multiple', 'multi', // @todo: remove these
+  'singleton'
+];
 
 export default function loader () { }
 
 loader.pitch = function (request) {
   const options = loaderUtils.getOptions(this) || {};
-  const multi = options.multiple || options.multi || options.singleton === false;
+  const singleton = options.singleton;
   const workerLoaderOptions = {};
   for (let i in options) {
     if (comlinkLoaderSpecificOptions.indexOf(i) === -1) {
@@ -32,13 +35,34 @@ loader.pitch = function (request) {
     }
   }
 
+  const workerLoader = `!worker-loader?${JSON.stringify(workerLoaderOptions)}!${slash(path.resolve(__dirname, 'comlink-worker-loader.js'))}`;
+
+  const remainingRequest = JSON.stringify(workerLoader + '!' + request);
+
+  // ?singleton mode: export an instance of the worker
+  if (singleton === true) {
+    return `
+      module.exports = require('comlink').wrap(require(${remainingRequest})());
+      ${options.module === false ? '' : 'module.exports.__esModule = true;'}
+    `.replace(/\n\s*/g, '');
+  }
+
+  // ?singleton=false mode: always return a new worker from the factory
+  if (singleton === false) {
+    return `
+      module.exports = function () {
+        return require('comlink').wrap(require(${remainingRequest})());
+      };
+    `.replace(/\n\s*/g, '');
+  }
+
   return `
-    import { wrap } from 'comlink';
-    var inst;
-    var worker = wrap(require('!worker-loader?${JSON.stringify(workerLoaderOptions)}!${slash(path.resolve(__dirname, 'comlink-worker-loader.js'))}!${request}');
-    export default function f() {
-      if (this instanceof f) return wrap(worker());
-      return inst = inst || wrap(worker());
-    }
+    var wrap = require('comlink').wrap,
+        Worker = require(${remainingRequest}),
+        inst;
+    module.exports = function f() {
+      if (this instanceof f) return wrap(Worker());
+      return inst || (inst = wrap(Worker()));
+    };
   `.replace(/\n\s*/g, '');
 };
