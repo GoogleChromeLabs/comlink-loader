@@ -110,7 +110,7 @@ Now, let's write a simple module that we're going to load in a Worker:
 **greetings.worker.ts**:
 
 ```ts
-export async function greet(subject: string): string {
+export async function greet(subject: string): Promise<string> {
   return `Hello, ${subject}!`;
 }
 ```
@@ -120,7 +120,7 @@ We can import our the above module, and since the filename includes `.worker.ts`
 **index.ts**:
 
 ```ts
-import { greet } from './greetings.worker.ts';
+import { greet } from './greetings.worker';
 
 async function demo() {
   console.log(await greet('dog'));
