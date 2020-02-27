@@ -120,7 +120,7 @@ We can import our the above module, and since the filename includes `.worker.ts`
 **index.ts**:
 
 ```ts
-import { greet } from './greetings.worker.ts';
+import { greet } from './greetings.worker';
 
 async function demo() {
   console.log(await greet('dog'));
