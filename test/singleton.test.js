@@ -17,11 +17,19 @@
 import sinon from 'sinon';
 import 'jasmine-sinon';
 
-const OriginalWorker = self.Worker;
-self.Worker = sinon.spy((url, opts) => new OriginalWorker(url, opts));
-
 describe('singleton', () => {
+  let OriginalWorker;
   let exported;
+
+  beforeAll(() => {
+    OriginalWorker = self.Worker;
+    self.Worker = sinon.spy((url, opts) => new OriginalWorker(url, opts));
+  });
+
+  afterAll(() => {
+    // Reset the original Worker constructor for next tests
+    self.Worker = OriginalWorker;
+  });
 
   it('should immediately instantiate the worker', async () => {
     // we're using dynamic import here so the Worker spy can be installed before-hand
@@ -50,4 +58,9 @@ describe('singleton', () => {
       expect(e).toMatch(/Error/);
     }
   });
+
+  it('should have a property to access the underlying worker', async () => {
+    expect(exported.worker instanceof OriginalWorker).toBe(true);
+  });
 });
+

@@ -18,11 +18,19 @@ import sinon from 'sinon';
 import 'jasmine-sinon';
 import MyWorker from 'comlink-loader!./worker';
 
-const OriginalWorker = self.Worker;
-self.Worker = sinon.spy((url, opts) => new OriginalWorker(url, opts));
-
 describe('worker', () => {
+  let OriginalWorker;
   let worker, inst;
+
+  beforeAll(() => {
+    OriginalWorker = self.Worker;
+    self.Worker = sinon.spy((url, opts) => new OriginalWorker(url, opts));
+  });
+
+  afterAll(() => {
+    // Reset the original Worker constructor for next tests
+    self.Worker = OriginalWorker;
+  });
 
   it('should be a factory', async () => {
     worker = new MyWorker();
@@ -74,4 +82,12 @@ describe('worker', () => {
 
     expect(self.Worker).not.toHaveBeenCalled();
   });
+
+  it('should have a property to access the underlying worker', async () => {
+    self.Worker.resetHistory();
+
+    const worker = MyWorker();
+    expect(worker.worker instanceof OriginalWorker).toBe(true);
+  });
 });
+

@@ -23,7 +23,7 @@ const comlinkLoaderSpecificOptions = [
   'singleton'
 ];
 
-export default function loader () { }
+export default function loader() { }
 
 loader.pitch = function (request) {
   const options = loaderUtils.getOptions(this) || {};
@@ -39,30 +39,56 @@ loader.pitch = function (request) {
 
   const remainingRequest = JSON.stringify(workerLoader + '!' + request);
 
+  const wrapperBuilder = `
+  var Worker = require(${remainingRequest});
+  var wrap = require('comlink').wrap;
+
+  function getWrappedWorker() {
+    var worker = Worker();
+    var wrapper = wrap(worker);
+
+    if (typeof Proxy === 'function') {
+      var proxy = new Proxy(wrapper, {
+        get: function (target, prop, receiver) {
+          if (prop === 'worker') {
+            return worker;
+          }
+          return Reflect.get(...arguments);
+        }
+      });
+
+      return proxy;
+    } else {
+      wrapper.worker = worker;
+      return wrapper;
+    }
+  } `;
+
+
   // ?singleton mode: export an instance of the worker
   if (singleton === true) {
     return `
-      module.exports = require('comlink').wrap(require(${remainingRequest})());
-      ${options.module === false ? '' : 'module.exports.__esModule = true;'}
-    `.replace(/\n\s*/g, '');
+  ${wrapperBuilder}
+  module.exports = getWrappedWorker();
+  ${ options.module === false ? '' : 'module.exports.__esModule = true;'}
+  `.replace(/\n\s*/g, '');
   }
 
   // ?singleton=false mode: always return a new worker from the factory
   if (singleton === false) {
     return `
-      module.exports = function () {
-        return require('comlink').wrap(require(${remainingRequest})());
-      };
-    `.replace(/\n\s*/g, '');
+    ${wrapperBuilder}
+    module.exports = getWrappedWorker; `.replace(/\n\s*/g, '');
   }
 
   return `
-    var wrap = require('comlink').wrap,
-        Worker = require(${remainingRequest}),
-        inst;
-    module.exports = function f() {
-      if (this instanceof f) return wrap(Worker());
-      return inst || (inst = wrap(Worker()));
-    };
+  ${ wrapperBuilder}
+  var inst;
+  module.exports = function f() {
+    if (this instanceof f)
+      return getWrappedWorker();
+
+    return inst || (inst = getWrappedWorker());
+  };
   `.replace(/\n\s*/g, '');
 };
