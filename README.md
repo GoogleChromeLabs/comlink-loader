@@ -110,7 +110,7 @@ Now, let's write a simple module that we're going to load in a Worker:
 **greetings.worker.ts**:
 
 ```ts
-export async function greet(subject: string): string {
+export async function greet(subject: string): Promise<string> {
   return `Hello, ${subject}!`;
 }
 ```
